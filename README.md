@@ -12,7 +12,7 @@ Sistema web para gestionar el stock de ingredientes y proveedores de un restaura
 ## Estructura del Proyecto
 
 ```
-grupo10-restaurante/
+Jurassic-Food/
 ├── app.js                 # Archivo principal de la aplicación
 ├── package.json           # Configuración y dependencias
 ├── .env                   # Variables de entorno

@@ -1,0 +1,47 @@
+extends ../layout
+
+block content
+  .encabezado-proveedores
+    h2 Proveedores
+    a.boton.boton-exito(href="/proveedores/crear") Agregar nuevo proveedor
+
+  if proveedores && proveedores.length > 0
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Contacto
+          th Teléfono
+          th Email
+          th Acciones
+      tbody
+        each proveedor in proveedores
+          tr
+            td= proveedor.id
+            td= proveedor.nombre
+            td= proveedor.contacto
+            td= proveedor.telefono
+            td= proveedor.email
+            td
+              a.boton.boton-advertencia(href=`/proveedores/${proveedor.id}/editar`) Editar
+              form(style="display: inline;", method="POST", action=`/proveedores/${proveedor.id}/eliminar?_method=DELETE`)
+                button.boton.boton-peligro(type="submit") Eliminar
+  else
+    .sin-datos
+      p No hay proveedores registrados.
+
+  style.
+    .encabezado-proveedores {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .sin-datos {
+      text-align: center;
+      padding: 40px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      color: #666;
+    }

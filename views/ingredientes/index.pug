@@ -1,0 +1,47 @@
+extends ../layout
+
+block content
+  .encabezado-ingredientes
+    h2 Stock de Ingredientes
+    a.boton.boton-exito(href="/ingredientes/crear") Agregar nuevo ingrediente
+
+  if ingredientes && ingredientes.length > 0
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Cantidad
+          th Unidad
+          th Precio
+          th Acciones
+      tbody
+        each ingrediente in ingredientes
+          tr
+            td= ingrediente.id
+            td= ingrediente.nombre
+            td= ingrediente.cantidad
+            td= ingrediente.unidad
+            td $#{ingrediente.precio}
+            td
+              a.boton.boton-advertencia(href=`/ingredientes/${ingrediente.id}/editar`) Editar
+              form(style="display: inline;", method="POST", action=`/ingredientes/${ingrediente.id}/eliminar?_method=DELETE`)
+                button.boton.boton-peligro(type="submit") Eliminar
+  else
+    .sin-datos
+      p No hay ingredientes registrados.
+
+  style.
+    .encabezado-ingredientes {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .sin-datos {
+      text-align: center;
+      padding: 40px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      color: #666;
+    }

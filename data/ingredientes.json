@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "nombre": "Tomate",
+    "cantidad": 34,
+    "unidad": "unidad",
+    "precio": 15000
+  },
+  {
+    "id": 2,
+    "nombre": "Cebolla",
+    "cantidad": 10,
+    "unidad": "unidad",
+    "precio": 10000
+  },
+  {
+    "id": 3,
+    "nombre": "Pimienta",
+    "cantidad": 10,
+    "unidad": "unidad",
+    "precio": 10000
+  }
+]

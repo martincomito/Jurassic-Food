@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  h2 Agregar nuevo proveedor
+  
+  form(method="POST", action="/proveedores")
+    .grupo-formulario
+      label(for="nombre") Nombre de la Empresa:
+      input(type="text", id="nombre", name="nombre", required)
+    
+    .fila-formulario
+      .grupo-formulario
+        label(for="contacto") Persona de Contacto:
+        input(type="text", id="contacto", name="contacto", required)
+      
+      .grupo-formulario
+        label(for="telefono") Teléfono:
+        input(type="tel", id="telefono", name="telefono", required)
+    
+    .grupo-formulario
+      label(for="email") Email:
+      input(type="email", id="email", name="email", required)
+    
+    
+    
+    .acciones-formulario
+      button.boton.boton-exito(type="submit") Crear Proveedor
+      a.boton.boton-principal(href="/proveedores") Cancelar
+
+  style.
+    .acciones-formulario {
+      margin-top: 20px;
+      text-align: center;
+    }

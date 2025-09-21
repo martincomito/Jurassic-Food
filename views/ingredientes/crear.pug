@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+  h2 Agregar nuevo ingrediente
+  
+  form(method="POST", action="/ingredientes")
+    .fila-formulario
+      .grupo-formulario
+        label(for="nombre") Nombre:
+        input(type="text", id="nombre", name="nombre", required)
+      
+      .grupo-formulario
+        label(for="cantidad") Cantidad:
+        input(type="number", id="cantidad", name="cantidad", min="0", step="0.01", required)
+    
+    .fila-formulario
+      .grupo-formulario
+        label(for="unidad") Unidad:
+        select(id="unidad", name="unidad", required)
+          option(value="") Seleccionar unidad
+          option(value="kilo") Kilo
+          option(value="unidad") Unidad
+          option(value="paquete") Paquete
+      
+      .grupo-formulario
+        label(for="precio") Precio:
+        input(type="number", id="precio", name="precio", min="0", step="0.01", required)
+    
+    .acciones-formulario
+      button.boton.boton-exito(type="submit") Crear Ingrediente
+      a.boton.boton-principal(href="/ingredientes") Cancelar
+
+  style.
+    .acciones-formulario {
+      margin-top: 20px;
+      text-align: center;
+    }

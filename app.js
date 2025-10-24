@@ -1,8 +1,10 @@
-import express from "express";
-import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import methodOverride from "method-override";
+import express from "express";
+import dotenv from "dotenv";
+
+import conectarDB from "./database/db.js";
 
 // Importar rutas
 import rutasIngredientes from "./routes/rutasIngredientes.js";
@@ -34,7 +36,21 @@ app.get("/", (req, res) => {
 app.use("/ingredientes", rutasIngredientes);
 app.use("/proveedores", rutasProveedores);
 
-// Iniciar servidor
-app.listen(PUERTO, () => {
-  console.log(`Servidor corriendo en http://localhost:${PUERTO}`);
-});
+// Función para conectar a la base de datos e iniciar servidor
+const iniciarServidor = async () => {
+  try {
+    // Conectar a MongoDB
+    await conectarDB();
+
+    // Iniciar servidor
+    app.listen(PUERTO, () => {
+      console.log(`Servidor corriendo en http://localhost:${PUERTO}`);
+    });
+  } catch (error) {
+    console.error("Error al iniciar el servidor:", error);
+    process.exit(1);
+  }
+};
+
+// Iniciar la aplicación
+iniciarServidor();

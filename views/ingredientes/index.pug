@@ -5,6 +5,9 @@ block content
     h2 Stock de Ingredientes
     a.boton.boton-exito(href="/ingredientes/crear") Agregar nuevo ingrediente
 
+  if error
+    .mensaje-error= error
+
   if ingredientes && ingredientes.length > 0
     table
       thead
@@ -42,4 +45,11 @@ block content
       background-color: #f8f9fa;
       border-radius: 8px;
       color: #666;
+    }
+    
+    .mensaje-error {
+      color: #721c24;
+      padding: 10px;
+      margin-bottom: 20px;
+      text-align: center;
     }

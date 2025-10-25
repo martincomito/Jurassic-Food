@@ -37,9 +37,9 @@ export const crearProveedor = async (req, res) => {
     res.redirect("/proveedores");
   } catch (error) {
     console.error("Error al crear proveedor:", error);
-    res.status(500).json({
-      mensaje: "Error al crear el proveedor",
-      error: error.message,
+    res.render("proveedores/crear", {
+      proveedor: req.body,
+      error: "Error al crear el proveedor. Por favor, intente de nuevo.",
     });
   }
 };
@@ -83,18 +83,18 @@ export const actualizarProveedor = async (req, res) => {
       { new: true, runValidators: true } // Esto asegura que se devuelva el documento actualizado y se validen los datos
     );
     if (!proveedorActualizado) {
-      return res.status(404).json({
-        mensaje: "Proveedor no encontrado",
-        error: "El proveedor solicitado no existe",
+      return res.render("proveedores/editar", {
+        proveedor: req.body,
+        error: "Proveedor no encontrado",
       });
     }
 
     res.redirect("/proveedores");
   } catch (error) {
     console.error("Error al actualizar proveedor:", error);
-    res.status(500).json({
-      mensaje: "Error al actualizar el proveedor",
-      error: error.message,
+    res.render("proveedores/editar", {
+      proveedor: req.body,
+      error: "Error al actualizar el proveedor. Por favor, intente de nuevo.",
     });
   }
 };
@@ -104,18 +104,20 @@ export const eliminarProveedor = async (req, res) => {
   try {
     const eliminado = await Proveedor.findByIdAndDelete(req.params.id);
     if (!eliminado) {
-      return res.status(404).json({
-        mensaje: "Proveedor no encontrado",
-        error: "El proveedor solicitado no existe",
+      const proveedores = await Proveedor.find();
+      return res.render("proveedores/index", {
+        proveedores: proveedores,
+        error: "Proveedor no encontrado",
       });
     }
 
     res.redirect("/proveedores");
   } catch (error) {
     console.error("Error al eliminar proveedor:", error);
-    res.status(500).json({
-      mensaje: "Error al eliminar el proveedor",
-      error: error.message,
+    const proveedores = await Proveedor.find();
+    res.render("proveedores/index", {
+      proveedores: proveedores,
+      error: "Error al eliminar el proveedor. Por favor, intente de nuevo.",
     });
   }
 };

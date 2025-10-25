@@ -38,9 +38,9 @@ export const crearIngrediente = async (req, res) => {
     res.redirect("/ingredientes");
   } catch (error) {
     console.error("Error al crear ingrediente:", error);
-    res.status(500).json({
-      mensaje: "Error al crear el ingrediente",
-      error: error.message,
+    res.render("ingredientes/crear", {
+      ingrediente: req.body,
+      error: "Error al crear el ingrediente. Por favor, intente de nuevo.",
     });
   }
 };
@@ -84,18 +84,18 @@ export const actualizarIngrediente = async (req, res) => {
       { new: true, runValidators: true } // Esto asegura que se devuelva el documento actualizado y se validen los datos
     );
     if (!ingredienteActualizado) {
-      return res.status(404).json({
-        mensaje: "Ingrediente no encontrado",
-        error: "El ingrediente solicitado no existe",
+      return res.render("ingredientes/editar", {
+        ingrediente: req.body,
+        error: "Ingrediente no encontrado",
       });
     }
 
     res.redirect("/ingredientes");
   } catch (error) {
     console.error("Error al actualizar ingrediente:", error);
-    res.status(500).json({
-      mensaje: "Error al actualizar el ingrediente",
-      error: error.message,
+    res.render("ingredientes/editar", {
+      ingrediente: req.body,
+      error: "Error al actualizar el ingrediente. Por favor, intente de nuevo.",
     });
   }
 };
@@ -105,18 +105,20 @@ export const eliminarIngrediente = async (req, res) => {
   try {
     const eliminado = await Ingrediente.findByIdAndDelete(req.params.id);
     if (!eliminado) {
-      return res.status(404).json({
-        mensaje: "Ingrediente no encontrado",
-        error: "El ingrediente solicitado no existe",
+      const ingredientes = await Ingrediente.find();
+      return res.render("ingredientes/index", {
+        ingredientes: ingredientes,
+        error: "Ingrediente no encontrado",
       });
     }
 
     res.redirect("/ingredientes");
   } catch (error) {
     console.error("Error al eliminar ingrediente:", error);
-    res.status(500).json({
-      mensaje: "Error al eliminar el ingrediente",
-      error: error.message,
+    const ingredientes = await Ingrediente.find();
+    res.render("ingredientes/index", {
+      ingredientes: ingredientes,
+      error: "Error al eliminar el ingrediente. Por favor, intente de nuevo.",
     });
   }
 };

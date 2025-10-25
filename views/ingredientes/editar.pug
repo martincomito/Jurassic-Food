@@ -3,6 +3,9 @@ extends ../layout
 block content
   h2 Editar Ingrediente
   
+  if error
+    .mensaje-error= error
+  
   form(method="POST", action=`/ingredientes/${ingrediente._id}?_method=PUT`)
     input(type="hidden", name="_method", value="PUT")
     .fila-formulario
@@ -57,4 +60,11 @@ block content
     .boton:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+    }
+    
+    .mensaje-error {
+      color: #721c24;
+      padding: 10px;
+      margin-bottom: 20px;
+      text-align: center;
     }

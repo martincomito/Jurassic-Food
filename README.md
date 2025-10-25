@@ -7,7 +7,9 @@ Sistema web para gestionar el stock de ingredientes y proveedores de un restaura
 - **Módulo de stock de ingredientes**: Gestión de inventario con CRUD
 - **Módulo de proveedores**: Administración de proveedores con CRUD
 - **Interfaz**: Plantillas Pug para las vistas
-- **Base de datos**: Almacenamiento en archivos JSON
+- **Base de datos**: MongoDB con Mongoose
+- **Validación**: Esquemas de datos con validaciones automáticas
+- **Timestamps**: Registro automático de fechas de creación y modificación
 
 ## Estructura del Proyecto
 
@@ -16,12 +18,11 @@ Jurassic-Food/
 ├── app.js                 # Archivo principal de la aplicación
 ├── package.json           # Configuración y dependencias
 ├── .env                   # Variables de entorno
-├── data/                  # Base de datos JSON
-│   ├── ingredientes.json  # Datos de ingredientes
-│   └── proveedores.json   # Datos de proveedores
-├── models/                # Modelos de datos
-│   ├── IngredienteModelo.js     # Modelo para ingredientes
-│   └── ProveedorModelo.js       # Modelo para proveedores
+├── database/              # Configuración de base de datos
+│   └── db.js              # Conexión a MongoDB
+├── models/                # Modelos de datos (Mongoose)
+│   ├── IngredienteModelo.js     # Esquema para ingredientes
+│   └── ProveedorModelo.js       # Esquema para proveedores
 ├── controllers/           # Controladores
 │   ├── controladorIngredientes.js
 │   └── controladorProveedores.js
@@ -43,13 +44,39 @@ Jurassic-Food/
 
 ## Instalación
 
-1. **Instalar dependencias**:
+1. **Instalar MongoDB**:
+
+   - Descargar e instalar MongoDB desde [mongodb.com](https://www.mongodb.com/try/download/community)
+
+2. **Configurar variables de entorno**:
+   Crear archivo `.env` en la raíz del proyecto:
+
+   ```env
+   MONGODB_URI=mongodb://localhost:27017/jurassic-food
+   PORT=3000
+   ```
+
+3. **Instalar dependencias**:
 
    ```bash
    npm install
    ```
 
-2. **Acceder a la aplicación**:
+4. **Iniciar MongoDB** (instalación local):
+
+   ```bash
+   mongod
+   ```
+
+5. **Ejecutar la aplicación**:
+
+   ```bash
+   npm start
+   # o para desarrollo con auto-recarga:
+   npm run dev
+   ```
+
+6. **Acceder a la aplicación**:
    Abrir navegador en `http://localhost:3000`
 
 ## Funcionalidades
@@ -70,29 +97,41 @@ Jurassic-Food/
 
 ## Estructura de Datos
 
-### Ingredientes
+### Ingredientes (Esquema de Mongoose)
 
-```json
+```javascript
 {
-  "id": 1,
-  "nombre": "Tomate",
-  "cantidad": 50,
-  "unidad": "kg",
-  "precio": 2.5
+  _id: ObjectId,           // ID único generado por MongoDB
+  nombre: String,
+  cantidad: Number,
+  unidad: String,
+  precio: Number,
+  createdAt: Date,         // Fecha de creación (automático)
+  updatedAt: Date          // Fecha de última modificación (automático)
 }
 ```
 
-### Proveedores
+### Proveedores (Esquema de Mongoose)
 
-```json
+```javascript
 {
-  "id": 1,
-  "nombre": "Distribuidora Comida Fresca",
-  "contacto": "Juan Pérez",
-  "telefono": "+54 11 1234-5678",
-  "email": "juan@distribuidora.com"
+  _id: ObjectId,           // ID único generado por MongoDB
+  nombre: String,
+  contacto: String,
+  telefono: String,
+  email: String,
+  createdAt: Date,       // Fecha de creación (automático)
+  updatedAt: Date        // Fecha de última modificación (automático)
 }
 ```
+
+### Características de los Esquemas
+
+- **Validaciones automáticas**: Los campos requeridos se validan automáticamente
+- **Timestamps**: Se registran automáticamente las fechas de creación y modificación por si son necesarios posteriormente
+- **Trim**: Se eliminan espacios en blanco al inicio y final de los strings
+- **Transformaciones**: El email se convierte automáticamente a minúsculas
+- **Validaciones numéricas**: Los valores numéricos tienen validaciones de mínimo
 
 ## Rutas Disponibles
 
@@ -122,6 +161,8 @@ Jurassic-Food/
 
 - **Node.js**
 - **Express.js**
+- **MongoDB**
+- **Mongoose**
 - **Pug**
 - **dotenv**
 - **method-override** - Para utilizar métodos HTTP PUT y DELETE
@@ -129,6 +170,7 @@ Jurassic-Food/
 
 ## Notas
 
-- Los datos se almacenan en archivos JSON en la carpeta `data/`
-- El sistema incluye validación básica en los formularios
+- Los datos se almacenan en MongoDB con esquemas de Mongoose
+- Los esquemas incluyen validaciones automáticas y timestamps
+- El sistema maneja conexiones a la base de datos con manejo de errores
 - Las plantillas incluyen estilos CSS básicos

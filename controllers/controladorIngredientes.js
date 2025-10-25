@@ -1,9 +1,9 @@
-import IngredienteModelo from "../models/IngredienteModelo.js";
+import Ingrediente from "../models/IngredienteModelo.js";
 
 // Obtener todos los ingredientes
 export const obtenerTodosIngredientes = async (req, res) => {
   try {
-    const ingredientes = await IngredienteModelo.obtenerTodos();
+    const ingredientes = await Ingrediente.find();
 
     res.render("ingredientes/index", {
       ingredientes: ingredientes,
@@ -34,7 +34,7 @@ export const crearIngrediente = async (req, res) => {
       precio: parseFloat(req.body.precio),
     };
 
-    await IngredienteModelo.crear(datosIngrediente);
+    await Ingrediente.create(datosIngrediente);
     res.redirect("/ingredientes");
   } catch (error) {
     console.error("Error al crear ingrediente:", error);
@@ -48,7 +48,7 @@ export const crearIngrediente = async (req, res) => {
 // Mostrar formulario para editar ingrediente
 export const mostrarFormularioEditar = async (req, res) => {
   try {
-    const ingrediente = await IngredienteModelo.obtenerPorId(req.params.id);
+    const ingrediente = await Ingrediente.findById(req.params.id);
     if (!ingrediente) {
       return res.status(404).json({
         mensaje: "Ingrediente no encontrado",
@@ -78,9 +78,10 @@ export const actualizarIngrediente = async (req, res) => {
       precio: parseFloat(req.body.precio),
     };
 
-    const ingredienteActualizado = await IngredienteModelo.actualizar(
+    const ingredienteActualizado = await Ingrediente.findByIdAndUpdate(
       req.params.id,
-      datosIngrediente
+      datosIngrediente,
+      { new: true, runValidators: true } // Esto asegura que se devuelva el documento actualizado y se validen los datos
     );
     if (!ingredienteActualizado) {
       return res.status(404).json({
@@ -102,7 +103,7 @@ export const actualizarIngrediente = async (req, res) => {
 // Eliminar ingrediente
 export const eliminarIngrediente = async (req, res) => {
   try {
-    const eliminado = await IngredienteModelo.eliminar(req.params.id);
+    const eliminado = await Ingrediente.findByIdAndDelete(req.params.id);
     if (!eliminado) {
       return res.status(404).json({
         mensaje: "Ingrediente no encontrado",

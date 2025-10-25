@@ -25,11 +25,32 @@ block content
     
     
     .acciones-formulario
-      button.boton.boton-exito(type="submit") Actualizar
+      button.boton.boton-exito(type="submit", id="boton-actualizar") Actualizar
       a.boton.boton-principal(href="/proveedores") Cancelar
+
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const submitBtn = document.getElementById('boton-actualizar');
+      
+      form.addEventListener('submit', function() {
+        // Deshabilitar el botón para evitar varios clicks
+        // si la operación tarda 
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Actualizando...';
+        submitBtn.style.opacity = '0.6';
+        submitBtn.style.cursor = 'not-allowed';
+      });
+    });
 
   style.
     .acciones-formulario {
       margin-top: 20px;
       text-align: center;
+    }
+    
+    .boton:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }

@@ -28,11 +28,33 @@ block content
         input(type="number", id="precio", name="precio", value=ingrediente.precio, min="0", step="0.01", required)
     
     .acciones-formulario
-      button.boton.boton-exito(type="submit") Actualizar Ingrediente
+      button.boton.boton-exito(type="submit", id="boton-actualizar") Actualizar Ingrediente
       a.boton.boton-principal(href="/ingredientes") Cancelar
+
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const submitBtn = document.getElementById('boton-actualizar');
+      
+      form.addEventListener('submit', function() {
+        // Esto deshabilita el botón mientras se hace la operación de 
+        // actualizar con la base de datos así evitamos nuevos clicks
+        // si la operación tarda un poco
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Actualizando...';
+        submitBtn.style.opacity = '0.6';
+        submitBtn.style.cursor = 'not-allowed';
+      });
+    });
 
   style.
     .acciones-formulario {
       margin-top: 20px;
       text-align: center;
+    }
+    
+    .boton:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }

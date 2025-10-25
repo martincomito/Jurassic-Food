@@ -9,7 +9,6 @@ block content
     table
       thead
         tr
-          th ID
           th Nombre
           th Cantidad
           th Unidad
@@ -18,14 +17,13 @@ block content
       tbody
         each ingrediente in ingredientes
           tr
-            td= ingrediente.id
             td= ingrediente.nombre
             td= ingrediente.cantidad
             td= ingrediente.unidad
             td $#{ingrediente.precio}
             td
-              a.boton.boton-advertencia(href=`/ingredientes/${ingrediente.id}/editar`) Editar
-              form(style="display: inline;", method="POST", action=`/ingredientes/${ingrediente.id}/eliminar?_method=DELETE`)
+              a.boton.boton-advertencia(href=`/ingredientes/${ingrediente._id}/editar`) Editar
+              form(style="display: inline;", method="POST", action=`/ingredientes/${ingrediente._id}/eliminar?_method=DELETE`)
                 button.boton.boton-peligro(type="submit") Eliminar
   else
     .sin-datos

@@ -9,7 +9,6 @@ block content
     table
       thead
         tr
-          th ID
           th Nombre
           th Contacto
           th Teléfono
@@ -18,14 +17,13 @@ block content
       tbody
         each proveedor in proveedores
           tr
-            td= proveedor.id
             td= proveedor.nombre
             td= proveedor.contacto
             td= proveedor.telefono
             td= proveedor.email
             td
-              a.boton.boton-advertencia(href=`/proveedores/${proveedor.id}/editar`) Editar
-              form(style="display: inline;", method="POST", action=`/proveedores/${proveedor.id}/eliminar?_method=DELETE`)
+              a.boton.boton-advertencia(href=`/proveedores/${proveedor._id}/editar`) Editar
+              form(style="display: inline;", method="POST", action=`/proveedores/${proveedor._id}/eliminar?_method=DELETE`)
                 button.boton.boton-peligro(type="submit") Eliminar
   else
     .sin-datos

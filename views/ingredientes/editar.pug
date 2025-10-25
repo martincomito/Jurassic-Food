@@ -3,7 +3,7 @@ extends ../layout
 block content
   h2 Editar Ingrediente
   
-  form(method="POST", action=`/ingredientes/${ingrediente.id}?_method=PUT`)
+  form(method="POST", action=`/ingredientes/${ingrediente._id}?_method=PUT`)
     input(type="hidden", name="_method", value="PUT")
     .fila-formulario
       .grupo-formulario

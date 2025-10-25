@@ -3,7 +3,7 @@ extends ../layout
 block content
   h2 Editar Proveedor
   
-  form(method="POST", action=`/proveedores/${proveedor.id}?_method=PUT`)
+  form(method="POST", action=`/proveedores/${proveedor._id}?_method=PUT`)
     input(type="hidden", name="_method", value="PUT")
     .grupo-formulario
       label(for="nombre") Nombre de la Empresa:

@@ -1,9 +1,9 @@
-import ProveedorModelo from "../models/ProveedorModelo.js";
+import Proveedor from "../models/ProveedorModelo.js";
 
 // Obtener todos los proveedores
 export const obtenerTodosProveedores = async (req, res) => {
   try {
-    const proveedores = await ProveedorModelo.obtenerTodos();
+    const proveedores = await Proveedor.find();
     res.render("proveedores/index", {
       proveedores,
     });
@@ -33,7 +33,7 @@ export const crearProveedor = async (req, res) => {
       email: req.body.email,
     };
 
-    const nuevoProveedor = await ProveedorModelo.crear(datosProveedor);
+    await Proveedor.create(datosProveedor);
     res.redirect("/proveedores");
   } catch (error) {
     console.error("Error al crear proveedor:", error);
@@ -47,7 +47,7 @@ export const crearProveedor = async (req, res) => {
 // Mostrar formulario para editar proveedor
 export const mostrarFormularioEditar = async (req, res) => {
   try {
-    const proveedor = await ProveedorModelo.obtenerPorId(req.params.id);
+    const proveedor = await Proveedor.findById(req.params.id);
     if (!proveedor) {
       return res.status(404).json({
         mensaje: "Proveedor no encontrado",
@@ -77,9 +77,10 @@ export const actualizarProveedor = async (req, res) => {
       email: req.body.email,
     };
 
-    const proveedorActualizado = await ProveedorModelo.actualizar(
+    const proveedorActualizado = await Proveedor.findByIdAndUpdate(
       req.params.id,
-      datosProveedor
+      datosProveedor,
+      { new: true, runValidators: true } // Esto asegura que se devuelva el documento actualizado y se validen los datos
     );
     if (!proveedorActualizado) {
       return res.status(404).json({
@@ -101,7 +102,7 @@ export const actualizarProveedor = async (req, res) => {
 // Eliminar proveedor
 export const eliminarProveedor = async (req, res) => {
   try {
-    const eliminado = await ProveedorModelo.eliminar(req.params.id);
+    const eliminado = await Proveedor.findByIdAndDelete(req.params.id);
     if (!eliminado) {
       return res.status(404).json({
         mensaje: "Proveedor no encontrado",

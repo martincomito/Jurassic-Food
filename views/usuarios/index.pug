@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+  .contenedor
+    .encabezado
+      h2 Gestión de Usuarios
+      a.boton.boton-exito(href=`/usuarios/crear?token=${token}`) Nuevo usuario
+
+    
+    if usuarios.length > 0
+      table
+        thead
+          tr
+            th Nombre
+            th Email
+            th Rol
+            th Acciones
+        tbody
+          each usuario in usuarios
+            tr
+              td= usuario.nombre
+              td= usuario.email
+              td= usuario.rol
+              td
+                a.boton.boton-advertencia(href=`/usuarios/${usuario._id}/editar?token=${token}`) Editar
+                form(action=`/usuarios/${usuario._id}/eliminar?_method=DELETE&token=${token}` method="POST" style="display:inline" onsubmit="return confirm('¿Estás seguro de eliminar este usuario?');")
+                  input(type="hidden" name="token" value=token)
+                  button.boton.boton-peligro(type="submit") Eliminar
+
+
+    else
+      p No hay usuarios registrados.

@@ -123,15 +123,116 @@ html(lang="es")
         border-radius: 4px;
         margin-bottom: 20px;
       }
+      .usuario-info {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .usuario-nombre {
+        font-weight: bold;
+        color: #333;
+      }
+      .usuario-rol {
+        color: #666;
+      }
   body
     .contenedor
       .encabezado
+        #user-container.usuario-info(style="display: none;")
+          span#user-display.usuario-nombre
+          span#user-role.usuario-rol
+          a#nav-logout.boton.boton-peligro(href="#") Cerrar sesión
         h1 Jurassic Food
-        p Módulos de Stock de Ingredientes y Proveedores
+        
+
+      .navegacion#main-nav(style="display: none;")
+        a#nav-inicio(href="/") Inicio
+        a#nav-ingredientes(href="/ingredientes" style="display: none;") Stock de Ingredientes
+        a#nav-proveedores(href="/proveedores" style="display: none;") Proveedores
+
       
       .navegacion
-        a(href="/") Inicio
-        a(href="/ingredientes") Stock de Ingredientes
-        a(href="/proveedores") Proveedores
+        a#nav-usuarios-admin.boton.boton-exito(href="#" style="display: none;") Usuarios
+
+
       
       block content
+
+    script.
+      // Lógica global de autenticación
+      document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('token');
+        const usuarioStr = localStorage.getItem('usuario');
+        
+        const mainNav = document.getElementById('main-nav');
+        const navLogin = document.getElementById('nav-login');
+        const navUsuariosAdmin = document.getElementById('nav-usuarios-admin');
+        const userContainer = document.getElementById('user-container');
+        const userDisplay = document.getElementById('user-display');
+        const userRole = document.getElementById('user-role');
+        const navLogout = document.getElementById('nav-logout');
+        
+        // Rutas públicas que no requieren login
+        const publicPaths = ['/auth/login'];
+        const currentPath = window.location.pathname;
+
+        if (token && usuarioStr) {
+          const usuario = JSON.parse(usuarioStr);
+          
+          // Usuario logueado
+          if(mainNav) mainNav.style.display = 'flex';
+          if(navLogin) navLogin.style.display = 'none';
+          
+          // Mostrar info de usuario
+          if(userContainer) {
+            userContainer.style.display = 'flex';
+            userDisplay.textContent = usuario.nombre;
+            userRole.textContent = `(${usuario.rol})`;
+          }
+
+          // Mostrar botón de Usuarios SOLO si es gerente
+          if (usuario.rol === 'gerente') {
+            if(navUsuariosAdmin) {
+              navUsuariosAdmin.style.display = 'inline-block';
+              navUsuariosAdmin.href = `/usuarios?token=${token}`;
+            }
+            // Mostrar también Ingredientes y Proveedores solo a gerentes
+            const navIngredientes = document.getElementById('nav-ingredientes');
+            const navProveedores = document.getElementById('nav-proveedores');
+            if(navIngredientes) {
+              navIngredientes.style.display = 'inline-block';
+              navIngredientes.href = `/ingredientes?token=${token}`;
+            }
+            if(navProveedores) {
+              navProveedores.style.display = 'inline-block';
+              navProveedores.href = `/proveedores?token=${token}`;
+            }
+
+          }
+
+
+
+
+          if(navLogout) {
+            navLogout.addEventListener('click', (e) => {
+              e.preventDefault();
+              localStorage.removeItem('token');
+              localStorage.removeItem('usuario');
+              window.location.href = '/auth/login';
+            });
+          }
+        } else {
+          // Usuario no logueado
+          if(mainNav) mainNav.style.display = 'none';
+          if(navLogin) navLogin.style.display = 'inline-block';
+          if(navUsuariosAdmin) navUsuariosAdmin.style.display = 'none';
+
+          if(userContainer) userContainer.style.display = 'none';
+
+          // Redirección si intenta acceder a ruta protegida
+          if (!publicPaths.includes(currentPath)) {
+            window.location.href = '/auth/login';
+          }
+        }
+      });

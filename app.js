@@ -9,6 +9,8 @@ import conectarDB from "./database/db.js";
 // Importar rutas
 import rutasIngredientes from "./routes/rutasIngredientes.js";
 import rutasProveedores from "./routes/rutasProveedores.js";
+import rutasAuth from "./routes/rutasAuth.js";
+import rutasUsuarios from "./routes/rutasUsuarios.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -27,6 +29,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method")); // Para usar métodos PUT y DELETE
+app.use(express.static("public"));
 
 // Rutas
 app.get("/", (req, res) => {
@@ -35,6 +38,8 @@ app.get("/", (req, res) => {
 
 app.use("/ingredientes", rutasIngredientes);
 app.use("/proveedores", rutasProveedores);
+app.use("/auth", rutasAuth);
+app.use("/usuarios", rutasUsuarios);
 
 // Función para conectar a la base de datos e iniciar servidor
 const iniciarServidor = async () => {

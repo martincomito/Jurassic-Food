@@ -7,8 +7,13 @@ import {
   actualizarIngrediente,
   eliminarIngrediente,
 } from "../controllers/controladorIngredientes.js";
+import { proteger, autorizar } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+
+// Proteger todas las rutas y requerir rol de gerente
+router.use(proteger);
+router.use(autorizar("gerente"));
 
 // GET /ingredientes - Mostrar todos los ingredientes
 router.get("/", obtenerTodosIngredientes);

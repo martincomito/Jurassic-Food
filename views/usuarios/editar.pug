@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+  .contenedor
+    .encabezado
+      h2 Editar Usuario
+    
+    if error
+      .error= error
+
+    form(action=`/usuarios/${usuario._id}?_method=PUT&token=${token}` method="POST")
+      input(type="hidden" name="token" value=token)
+
+
+      .grupo-formulario
+        label(for="nombre") Nombre
+        input#nombre(type="text" name="nombre" required value=usuario.nombre)
+
+      .grupo-formulario
+        label(for="email") Email
+        input#email(type="email" name="email" required value=usuario.email)
+      
+      .grupo-formulario
+        label(for="rol") Rol
+        select#rol(name="rol" required)
+          option(value="cocinero" selected=usuario.rol === 'cocinero') Cocinero
+          option(value="personal_salon" selected=usuario.rol === 'personal_salon') Personal de Salón
+          option(value="gerente" selected=usuario.rol === 'gerente') Gerente
+      
+      button.boton.boton-exito(type="submit") Actualizar Usuario
+      a.boton.boton-peligro(href=`/usuarios?token=${token}`) Cancelar
+

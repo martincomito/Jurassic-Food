@@ -7,8 +7,13 @@ import {
   actualizarProveedor,
   eliminarProveedor,
 } from "../controllers/controladorProveedores.js";
+import { proteger, autorizar } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+
+// Proteger todas las rutas y requerir rol de gerente
+router.use(proteger);
+router.use(autorizar("gerente"));
 
 // GET /proveedores - Mostrar todos los proveedores
 router.get("/", obtenerTodosProveedores);

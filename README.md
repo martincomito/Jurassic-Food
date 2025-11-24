@@ -1,3 +1,15 @@
+<div style="width:100%;">
+  <img 
+    width="300" 
+    height="300" 
+    style="margin:0 auto; display:block;" 
+    src="https://github.com/user-attachments/assets/d53bc4ed-34c5-47ac-8fd7-965c885778ee" 
+    alt="logo-dinosaurio"
+  />
+    <p>(Dinosaurio agregado por nosotros, no por una IA)</p>
+</div>
+
+
 # Jurassic Food
 
 Sistema web para Jurassic Food, un local gastronómico ficticio para la materia Desarrollo de Sistemas web back-end. El sistema gestiona el stock de ingredientes, productos, proveedores, pedidos y usuarios (tanto empleados como clientes), con sistema de autenticación basada en roles. Autentica con JWT, manteniendo la sesión en cookies. Se renderizan las diferentes vistas con Pug, haciendo que a través de los middlewares se vean diferentes niveles de información y se puedan hacer diferentes acciones según el tipo de usuario.

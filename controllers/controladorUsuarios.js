@@ -26,7 +26,7 @@ export const crearUsuario = async (req, res) => {
     if (usuarioExiste) {
       return res.render("usuarios/crear", {
         error: "El usuario ya existe",
-        usuario: req.body,
+        nuevoUsuario: req.body,
         token: req.token,
       });
     }
@@ -43,7 +43,7 @@ export const crearUsuario = async (req, res) => {
     console.error("Error al crear usuario:", error);
     res.render("usuarios/crear", {
       error: "Error al crear usuario",
-      usuario: req.body,
+      nuevoUsuario: req.body,
       token: req.token,
     });
   }

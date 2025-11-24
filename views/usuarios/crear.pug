@@ -13,11 +13,11 @@ block content
 
       .grupo-formulario
         label(for="nombre") Nombre
-        input#nombre(type="text" name="nombre" required value=usuario ? usuario.nombre : '')
+        input#nombre(type="text" name="nombre" required value=nuevoUsuario ? nuevoUsuario.nombre : '')
 
       .grupo-formulario
         label(for="email") Email
-        input#email(type="email" name="email" required value=usuario ? usuario.email : '')
+        input#email(type="email" name="email" required value=nuevoUsuario ? nuevoUsuario.email : '')
       
       .grupo-formulario
         label(for="password") Contraseña
@@ -27,9 +27,9 @@ block content
         label(for="rol") Rol
         select#rol(name="rol" required)
           option(value="" disabled selected) Seleccionar rol
-          option(value="cocinero" selected=usuario && usuario.rol === 'cocinero') Cocinero
-          option(value="personal_salon" selected=usuario && usuario.rol === 'personal_salon') Personal de salón
-          option(value="gerente" selected=usuario && usuario.rol === 'gerente') Gerente
+          option(value="cocinero" selected=nuevoUsuario && nuevoUsuario.rol === 'cocinero') Cocinero
+          option(value="personal_salon" selected=nuevoUsuario && nuevoUsuario.rol === 'personal_salon') Personal de salón
+          option(value="gerente" selected=nuevoUsuario && nuevoUsuario.rol === 'gerente') Gerente
       
       button.boton.boton-exito(type="submit") Crear usuario
       a.boton.boton-peligro(href="/usuarios") Cancelar

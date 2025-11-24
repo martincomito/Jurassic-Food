@@ -6,9 +6,8 @@ dotenv.config();
 
 const conectarDB = async () => {
   try {
-    // usamos la variable de entorno MONGODB_URI si está definida, sino usamos un valor por defecto
-    const mongoURI =
-      process.env.MONGODB_URI || "mongodb://localhost:27017/jurassic-food";
+    // usamos la variable de entorno MONGODB_ATLAS_URI (para la db en mongo atlas)
+    const mongoURI = process.env.MONGODB_ATLAS_URI;
 
     const connect = await mongoose.connect(mongoURI);
 

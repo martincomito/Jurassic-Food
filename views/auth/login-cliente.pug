@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+  .contenedor
+    .encabezado
+      h2 Iniciar sesión como cliente
+    
+    if mensaje
+      div(class=tipo === 'error' ? 'error' : 'exito')= mensaje
+
+    form(action="/auth/login-cliente" method="POST")
+      .grupo-formulario
+        label(for="email") Email:
+        input(type="email" name="email" required)
+      
+      .grupo-formulario
+        label(for="password") Contraseña:
+        input(type="password" name="password" required)
+      
+      button.boton.boton-principal(type="submit") Iniciar sesión
+    
+    p
+      | ¿No tenés cuenta? 
+      a(href="/auth/registro-cliente") Registrate acá

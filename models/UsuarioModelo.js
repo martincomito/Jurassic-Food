@@ -20,7 +20,7 @@ const usuarioSchema = new mongoose.Schema({
   },
   rol: {
     type: String,
-    enum: ["admin", "gerente", "cocinero", "personal_salon"],
+    enum: ["gerente", "cocinero", "personal_salon", "cliente"],
     default: "personal_salon",
   },
   fechaCreacion: {
@@ -29,12 +29,13 @@ const usuarioSchema = new mongoose.Schema({
   },
 });
 
-// Hashear la contraseña antes de guardar
+// hashear la contraseña antes de guardar
 usuarioSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
   try {
+    // agregamos un valor aleatorio en la contraseña antes de hashearla para que sea más segura
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();
@@ -43,7 +44,7 @@ usuarioSchema.pre("save", async function (next) {
   }
 });
 
-// Método para comparar contraseñas
+// método para comparar contraseñas
 usuarioSchema.methods.compararPassword = async function (passwordIngresada) {
   return await bcrypt.compare(passwordIngresada, this.password);
 };

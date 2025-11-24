@@ -5,7 +5,7 @@ block content
     .encabezado
       h2 Iniciar Sesión
     
-    form#loginForm
+    form(method="POST" action="/auth/login")
       .grupo-formulario
         label(for="email") Email
         input#email(type="email" name="email" required)
@@ -14,52 +14,4 @@ block content
         label(for="password") Contraseña
         input#password(type="password" name="password" required)
       
-      #mensajeError.error(style="display: none;")
-      
       button.boton.boton-principal(type="submit") Ingresar
-      
-
-
-  script.
-    const form = document.getElementById('loginForm');
-    const mensajeError = document.getElementById('mensajeError');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      mensajeError.style.display = 'none';
-      
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        const response = await fetch('/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          // Guardar token y usuario en localStorage para mantener la sesión
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('usuario', JSON.stringify({
-            nombre: data.nombre,
-            email: data.email,
-            rol: data.rol
-          }));
-          
-          // Redirigir al home
-          window.location.href = '/';
-        } else {
-          mensajeError.textContent = data.mensaje || 'Error al iniciar sesión';
-          mensajeError.style.display = 'block';
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        mensajeError.textContent = 'Error de conexión';
-        mensajeError.style.display = 'block';
-      }
-    });

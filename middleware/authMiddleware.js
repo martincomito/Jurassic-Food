@@ -2,29 +2,19 @@ import jwt from "jsonwebtoken";
 import Usuario from "../models/UsuarioModelo.js";
 
 export const proteger = async (req, res, next) => {
-  let token;
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  } else if (req.query.token) {
-    // Permitir token en query params para vistas GET
-    token = req.query.token;
-  } else if (req.body.token) {
-    // Permitir token en body para formularios POST/PUT/DELETE
-    token = req.body.token;
-  }
+  const token = req.cookies.token;
 
   if (token) {
     try {
-      // Verificar el token
+      // verificar el token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Obtener el usuario del token (sin password)
       req.usuario = await Usuario.findById(decoded.id).select("-password");
-      req.token = token; // Adjuntar token al request para usarlo en controladores
+      req.token = token;
+
+      // hacer disponibles el token y el usuario en las vistas
+      res.locals.token = token;
+      res.locals.usuario = req.usuario;
 
       next();
     } catch (error) {
@@ -43,4 +33,23 @@ export const autorizar = (...roles) => {
     }
     next();
   };
+};
+
+export const identificarUsuario = async (req, res, next) => {
+  let token;
+
+  if (req.cookies.token) {
+    token = req.cookies.token;
+  }
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.usuario = await Usuario.findById(decoded.id).select("-password");
+      res.locals.usuario = req.usuario;
+    } catch (error) {
+      console.log("Token inválido o expirado");
+    }
+  }
+  next();
 };

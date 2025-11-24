@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+  .encabezado-productos
+    h2 Gestión de productos
+    a.boton.boton-exito(href="/productos/crear") Nuevo producto
+
+  if productos && productos.length > 0
+    table
+      thead
+        tr
+          th Nombre
+          th Precio
+          th Descripción
+          th Disponible
+          th Acciones
+      tbody
+        each producto in productos
+          tr
+            td= producto.nombre
+            td $#{producto.precio}
+            td= producto.descripcion || '-'
+            td= producto.disponible ? 'Sí' : 'No'
+            td
+              a.boton.boton-advertencia(href=`/productos/${producto._id}/editar`) Editar
+              form(style="display: inline;", method="POST", action=`/productos/${producto._id}/eliminar?_method=DELETE` onsubmit="return confirm('¿Estás seguro de eliminar este producto?');")
+                button.boton.boton-peligro(type="submit") Eliminar
+  else
+    .sin-datos
+      p No hay productos registrados.
+
+  style.
+    .encabezado-productos {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .sin-datos {
+      text-align: center;
+      padding: 40px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      color: #666;
+    }

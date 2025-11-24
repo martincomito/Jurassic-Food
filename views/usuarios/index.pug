@@ -3,8 +3,8 @@ extends ../layout
 block content
   .contenedor
     .encabezado
-      h2 Gestión de Usuarios
-      a.boton.boton-exito(href=`/usuarios/crear?token=${token}`) Nuevo usuario
+      h2 Gestión de usuarios
+      a.boton.boton-exito(href="/usuarios/crear") Nuevo usuario
 
     
     if usuarios.length > 0
@@ -22,9 +22,8 @@ block content
               td= usuario.email
               td= usuario.rol
               td
-                a.boton.boton-advertencia(href=`/usuarios/${usuario._id}/editar?token=${token}`) Editar
-                form(action=`/usuarios/${usuario._id}/eliminar?_method=DELETE&token=${token}` method="POST" style="display:inline" onsubmit="return confirm('¿Estás seguro de eliminar este usuario?');")
-                  input(type="hidden" name="token" value=token)
+                a.boton.boton-advertencia(href=`/usuarios/${usuario._id}/editar`) Editar
+                form(action=`/usuarios/${usuario._id}/eliminar?_method=DELETE` method="POST" style="display:inline" onsubmit="return confirm('¿Estás seguro de eliminar este usuario?');")
                   button.boton.boton-peligro(type="submit") Eliminar
 
 

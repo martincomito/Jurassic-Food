@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 import methodOverride from "method-override";
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 import conectarDB from "./database/db.js";
 
@@ -11,6 +12,8 @@ import rutasIngredientes from "./routes/rutasIngredientes.js";
 import rutasProveedores from "./routes/rutasProveedores.js";
 import rutasAuth from "./routes/rutasAuth.js";
 import rutasUsuarios from "./routes/rutasUsuarios.js";
+import rutasPedidos from "./routes/rutasPedidos.js";
+import rutasProductos from "./routes/rutasProductos.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -28,11 +31,14 @@ app.set("views", path.join(__dirname, "views"));
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(methodOverride("_method")); // Para usar métodos PUT y DELETE
 app.use(express.static("public"));
 
+import { identificarUsuario } from "./middleware/authMiddleware.js";
+
 // Rutas
-app.get("/", (req, res) => {
+app.get("/", identificarUsuario, (req, res) => {
   res.render("index");
 });
 
@@ -40,6 +46,8 @@ app.use("/ingredientes", rutasIngredientes);
 app.use("/proveedores", rutasProveedores);
 app.use("/auth", rutasAuth);
 app.use("/usuarios", rutasUsuarios);
+app.use("/pedidos", rutasPedidos);
+app.use("/productos", rutasProductos);
 
 // Función para conectar a la base de datos e iniciar servidor
 const iniciarServidor = async () => {

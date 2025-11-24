@@ -1,0 +1,44 @@
+extends ../layout
+
+block content
+  h2 Nuevo producto
+  
+  if error
+    .mensaje-error= error
+  
+  form(method="POST", action="/productos")
+    .fila-formulario
+      .grupo-formulario
+        label(for="nombre") Nombre del producto:
+        input(type="text", id="nombre", name="nombre", required placeholder="Ej: Pizza grande")
+      
+      .grupo-formulario
+        label(for="precio") Precio:
+        input(type="number", id="precio", name="precio", min="0", step="0.01", required placeholder="$0")
+    
+    .grupo-formulario
+      label(for="descripcion") Descripción:
+      textarea(id="descripcion", name="descripcion", rows="3", placeholder="Descripción del producto...")
+
+    .grupo-formulario
+      label(for="disponible") 
+        input(type="checkbox", id="disponible", name="disponible", checked style="width: auto; margin-right: 10px;")
+        | Disponible para pedidos
+    
+    .acciones-formulario
+      button.boton.boton-exito(type="submit") Crear producto
+      a.boton.boton-principal(href="/productos") Cancelar
+
+  style.
+    .acciones-formulario {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .mensaje-error {
+      color: #721c24;
+      background-color: #f8d7da;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      text-align: center;
+    }

@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  .contenedor
+    .encabezado
+      h2 Registro de cliente
+    
+    if mensaje
+      div(class=tipo === 'error' ? 'error' : 'exito')= mensaje
+
+    form(action="/auth/registro-cliente" method="POST")
+      .grupo-formulario
+        label(for="nombre") Nombre:
+        input(type="text" name="nombre" required)
+
+      .grupo-formulario
+        label(for="email") Email:
+        input(type="email" name="email" required)
+      
+      .grupo-formulario
+        label(for="password") Contraseña:
+        input(type="password" name="password" required)
+      
+      button.boton.boton-principal(type="submit") Registrarse
+    
+    p
+      | ¿Ya tenés cuenta? 
+      a(href="/auth/login-cliente") Iniciá sesión acá

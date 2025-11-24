@@ -4,24 +4,25 @@ import {
   login,
   mostrarFormularioRegistro,
   mostrarFormularioLogin,
+  mostrarFormularioRegistroCliente,
+  mostrarFormularioLoginCliente,
+  registrarCliente,
+  loginCliente,
+  logout,
 } from "../controllers/controladorAuth.js";
-import { proteger, autorizar } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get(
-  "/registro",
-  proteger,
-  autorizar("gerente"),
-  mostrarFormularioRegistro
-);
-router.post("/registro", proteger, autorizar("gerente"), registrar);
-
+router.get("/registro", mostrarFormularioRegistro);
+router.post("/registro", registrar);
 router.get("/login", mostrarFormularioLogin);
 router.post("/login", login);
 
-router.get("/logout", (req, res) => {
-  res.redirect("/auth/login");
-});
+router.get("/registro-cliente", mostrarFormularioRegistroCliente);
+router.post("/registro-cliente", registrarCliente);
+router.get("/login-cliente", mostrarFormularioLoginCliente);
+router.post("/login-cliente", loginCliente);
+
+router.post("/logout", logout);
 
 export default router;

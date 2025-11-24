@@ -3,30 +3,32 @@ extends ../layout
 block content
   .contenedor
     .encabezado
-      h2 Editar Usuario
+      h2 Editar usuario
     
     if error
       .error= error
 
-    form(action=`/usuarios/${usuario._id}?_method=PUT&token=${token}` method="POST")
-      input(type="hidden" name="token" value=token)
+    form(action=`/usuarios/${usuarioEditar._id}?_method=PUT` method="POST")
 
 
       .grupo-formulario
         label(for="nombre") Nombre
-        input#nombre(type="text" name="nombre" required value=usuario.nombre)
+        input#nombre(type="text" name="nombre" required value=usuarioEditar.nombre)
 
       .grupo-formulario
         label(for="email") Email
-        input#email(type="email" name="email" required value=usuario.email)
+        input#email(type="email" name="email" required value=usuarioEditar.email)
       
       .grupo-formulario
         label(for="rol") Rol
-        select#rol(name="rol" required)
-          option(value="cocinero" selected=usuario.rol === 'cocinero') Cocinero
-          option(value="personal_salon" selected=usuario.rol === 'personal_salon') Personal de Salón
-          option(value="gerente" selected=usuario.rol === 'gerente') Gerente
+        if usuarioEditar.rol !== 'cliente'
+          select#rol(name="rol" required)
+            option(value="cocinero" selected=usuarioEditar.rol === 'cocinero') Cocinero
+            option(value="personal_salon" selected=usuarioEditar.rol === 'personal_salon') Personal de salón
+            option(value="gerente" selected=usuarioEditar.rol === 'gerente') Gerente
+        else
+          p Cliente
       
-      button.boton.boton-exito(type="submit") Actualizar Usuario
-      a.boton.boton-peligro(href=`/usuarios?token=${token}`) Cancelar
+      button.boton.boton-exito(type="submit") Actualizar usuario
+      a.boton.boton-peligro(href="/usuarios") Cancelar
 

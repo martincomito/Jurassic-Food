@@ -1,32 +1,86 @@
 extends layout
 
 block content
+  if !usuario
+    .contenedor-login
+      h2 Bienvenido
+      
+      .botones-login
+        a.boton.boton-principal(href="/auth/login") Soy empleado
+        a.boton.boton-exito(href="/auth/login-cliente") Soy cliente
     
-  style.
-    .bienvenida {
-      text-align: center;
-    }
-    .modulos {
-      display: flex;
-      gap: 30px;
-      margin-top: 40px;
-      justify-content: center;
-    }
-    .modulo {
-      background-color: #f8f9fa;
-      padding: 30px;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      min-width: 300px;
-    }
-    .modulo h3 {
-      color: #007bff;
-      margin-bottom: 15px;
-    }
-    .modulo p {
-      margin-bottom: 20px;
-      color: #666;
-    }
-    .modulo .boton {
-      margin: 5px;
-    }
+    style.
+      .contenedor-login {
+        text-align: center;
+        padding: 40px;
+      }
+      .contenedor-login h2 {
+        margin-bottom: 20px;
+      }
+      .contenedor-login p {
+        margin-bottom: 30px;
+        font-size: 18px;
+      }
+      .botones-login {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
+      .botones-login .boton {
+        min-width: 150px;
+        font-size: 18px;
+        padding: 15px 30px;
+      }
+  else
+    .contenedor-inicio
+      if usuario.rol === 'gerente'
+        .opciones-gerente
+          ul
+            li
+              a(href="/ingredientes") Stock de ingredientes
+            li
+              a(href="/proveedores") Proveedores
+            li
+              a(href="/productos") Productos (menú)
+            li
+              a(href="/usuarios") Gestión de usuarios
+      else if usuario.rol === 'cliente'
+        .opciones-cliente
+          ul
+            li
+              a(href="/pedidos/mis-pedidos") Ver mis pedidos
+            li
+              a(href="/pedidos/crear") Crear un pedido nuevo
+      else if usuario.rol === 'cocinero' || usuario.rol === 'personal_salon'
+        .opciones-empleado
+          ul
+            li
+              a(href="/pedidos/pendientes") Ver pedidos pendientes
+            if usuario.rol === 'personal_salon'
+              li
+                a(href="/pedidos/crear") Crear pedido
+    style.
+      .contenedor-inicio {
+        padding: 20px;
+      }
+      .contenedor-inicio h2 {
+        margin-bottom: 20px;
+      }
+      .opciones-gerente, .opciones-cliente, .opciones-empleado {
+        margin-top: 20px;
+      }
+      .opciones-gerente ul, .opciones-cliente ul, .opciones-empleado ul {
+        list-style: none;
+        padding: 0;
+      }
+      .opciones-gerente li, .opciones-cliente li, .opciones-empleado li {
+        margin: 10px 0;
+      }
+      .opciones-gerente a, .opciones-cliente a, .opciones-empleado a {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 16px;
+      }
+      .opciones-gerente a:hover, .opciones-cliente a:hover, .opciones-empleado a:hover {
+        text-decoration: underline;
+      }

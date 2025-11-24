@@ -23,7 +23,7 @@ html(lang="es")
         text-align: center;
         margin-bottom: 30px;
         padding-bottom: 20px;
-        border-bottom: 2px solid #e0e0e0;
+        border-bottom: 2px solid #000000ff;
       }
       .navegacion {
         display: flex;
@@ -123,11 +123,24 @@ html(lang="es")
         border-radius: 4px;
         margin-bottom: 20px;
       }
+      .encabezado h1 {
+        margin: 0;
+      }
+      .titulo-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+      }
+      .logo {
+        height: 50px;
+        width: auto;
+      }
       .usuario-info {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 8px;
+        gap: 10px;
       }
       .usuario-nombre {
         font-weight: bold;
@@ -139,100 +152,27 @@ html(lang="es")
   body
     .contenedor
       .encabezado
-        #user-container.usuario-info(style="display: none;")
-          span#user-display.usuario-nombre
-          span#user-role.usuario-rol
-          a#nav-logout.boton.boton-peligro(href="#") Cerrar sesión
-        h1 Jurassic Food
-        
+        if usuario
+          .usuario-info
+            span.usuario-nombre= usuario.nombre
+            span.usuario-rol= `(${usuario.rol})`
+            form(method="POST" action="/auth/logout" style="display: inline;")
+              button.boton.boton-peligro(type="submit") Cerrar sesión
+        .titulo-logo
+          img.logo(src="/img/logo-dinosaurio.png" alt="Logo Jurassic Food")
+          h1 Jurassic Food
 
-      .navegacion#main-nav(style="display: none;")
-        a#nav-inicio(href="/") Inicio
-        a#nav-ingredientes(href="/ingredientes" style="display: none;") Stock de Ingredientes
-        a#nav-proveedores(href="/proveedores" style="display: none;") Proveedores
+      if usuario
+        .navegacion
+          a(href="/") Inicio
+          if usuario.rol === 'gerente'
+            a(href="/ingredientes") Stock de ingredientes
+            a(href="/proveedores") Proveedores
+            a(href="/productos") Productos
+            a(href="/usuarios") Usuarios
+          if usuario.rol === 'gerente' || usuario.rol === 'cocinero' || usuario.rol === 'personal_salon'
+            a(href="/pedidos/pendientes") Pedidos pendientes
+          if usuario.rol === 'cliente'
+            a(href="/pedidos/mis-pedidos") Mis pedidos
 
-      
-      .navegacion
-        a#nav-usuarios-admin.boton.boton-exito(href="#" style="display: none;") Usuarios
-
-
-      
       block content
-
-    script.
-      // Lógica global de autenticación
-      document.addEventListener('DOMContentLoaded', () => {
-        const token = localStorage.getItem('token');
-        const usuarioStr = localStorage.getItem('usuario');
-        
-        const mainNav = document.getElementById('main-nav');
-        const navLogin = document.getElementById('nav-login');
-        const navUsuariosAdmin = document.getElementById('nav-usuarios-admin');
-        const userContainer = document.getElementById('user-container');
-        const userDisplay = document.getElementById('user-display');
-        const userRole = document.getElementById('user-role');
-        const navLogout = document.getElementById('nav-logout');
-        
-        // Rutas públicas que no requieren login
-        const publicPaths = ['/auth/login'];
-        const currentPath = window.location.pathname;
-
-        if (token && usuarioStr) {
-          const usuario = JSON.parse(usuarioStr);
-          
-          // Usuario logueado
-          if(mainNav) mainNav.style.display = 'flex';
-          if(navLogin) navLogin.style.display = 'none';
-          
-          // Mostrar info de usuario
-          if(userContainer) {
-            userContainer.style.display = 'flex';
-            userDisplay.textContent = usuario.nombre;
-            userRole.textContent = `(${usuario.rol})`;
-          }
-
-          // Mostrar botón de Usuarios SOLO si es gerente
-          if (usuario.rol === 'gerente') {
-            if(navUsuariosAdmin) {
-              navUsuariosAdmin.style.display = 'inline-block';
-              navUsuariosAdmin.href = `/usuarios?token=${token}`;
-            }
-            // Mostrar también Ingredientes y Proveedores solo a gerentes
-            const navIngredientes = document.getElementById('nav-ingredientes');
-            const navProveedores = document.getElementById('nav-proveedores');
-            if(navIngredientes) {
-              navIngredientes.style.display = 'inline-block';
-              navIngredientes.href = `/ingredientes?token=${token}`;
-            }
-            if(navProveedores) {
-              navProveedores.style.display = 'inline-block';
-              navProveedores.href = `/proveedores?token=${token}`;
-            }
-
-          }
-
-
-
-
-          if(navLogout) {
-            navLogout.addEventListener('click', (e) => {
-              e.preventDefault();
-              localStorage.removeItem('token');
-              localStorage.removeItem('usuario');
-              window.location.href = '/auth/login';
-            });
-          }
-        } else {
-          // Usuario no logueado
-          if(mainNav) mainNav.style.display = 'none';
-          if(navLogin) navLogin.style.display = 'inline-block';
-          if(navUsuariosAdmin) navUsuariosAdmin.style.display = 'none';
-
-          if(userContainer) userContainer.style.display = 'none';
-
-          // Redirección si intenta acceder a ruta protegida
-          if (!publicPaths.includes(currentPath)) {
-            window.location.href = '/auth/login';
-          }
-        }
-      });

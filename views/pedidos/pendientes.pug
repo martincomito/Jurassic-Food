@@ -1,0 +1,68 @@
+extends ../layout
+
+block content
+  .contenedor
+    .encabezado
+      h2 Pedidos pendientes
+
+    if pedidos.length === 0
+      p No hay pedidos pendientes.
+    else
+      table
+        thead
+          tr
+            th ID pedido
+            th Cliente
+            th Fecha
+            th Productos
+            th Total
+            th Acciones
+        tbody
+          each pedido in pedidos
+            tr(id=`pedido-${pedido._id}`)
+              td= pedido._id
+              td= pedido.usuario ? pedido.usuario.nombre : 'Cliente desconocido'
+              td= new Date(pedido.fechaCreacion).toLocaleString('es-AR', { hour12: false })
+              td
+                ul(style="list-style: none; padding: 0; margin: 0;")
+                  each item in pedido.productos
+                    if item.producto
+                      li #{item.producto.nombre} x #{item.cantidad}
+                    else
+                      li Producto no disponible x #{item.cantidad}
+              td $#{pedido.total}
+              td
+                button.boton.boton-exito(onclick=`marcarListo('${pedido._id}')`) Marcar como listo
+
+  script.
+    async function marcarListo(id) {
+      try {
+        const response = await fetch(`/pedidos/${id}/listo`, {
+          method: 'PUT',
+          credentials: 'same-origin'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          const fila = document.getElementById(`pedido-${id}`);
+          if (fila) {
+            fila.remove();
+          }
+          
+          const tbody = document.querySelector('tbody');
+          if (tbody && tbody.children.length === 0) {
+            window.location.reload();
+          }
+          const tbody = document.querySelector('tbody');
+          if (tbody && tbody.children.length === 0) {
+            window.location.reload();
+          }
+        } else {
+          alert(data.mensaje || 'Error al marcar el pedido como listo');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Error de conexión');
+      }
+    }

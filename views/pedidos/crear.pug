@@ -1,0 +1,131 @@
+extends ../layout
+
+block content
+  .contenedor
+    .encabezado
+      h2 Crear nuevo pedido
+    
+    form#form-pedido
+      #productos-container
+        .grupo-formulario.producto-item
+          label Producto:
+          select.producto-select(name="producto" required onchange="actualizarPrecio(this)")
+            option(value="" data-precio="0") Seleccionar producto
+            each producto in productos
+              option(value=producto._id data-precio=producto.precio)= producto.nombre + ' - $' + producto.precio
+          
+          label Cantidad:
+          input.cantidad-input(type="number" name="cantidad" value="1" min="1" required onchange="actualizarTotal()")
+          
+          button.boton.boton-peligro(type="button" onclick="eliminarProducto(this)" style="display:none;") X
+
+      button.boton.boton-exito(type="button" onclick="agregarProducto()") + Agregar producto
+      
+      hr
+      
+      h3 Total: $<span id="total-display">0</span>
+      
+      .grupo-formulario
+        label(for="metodoPago") Método de pago:
+        select(name="metodoPago" required)
+          option(value="efectivo") Efectivo
+          option(value="transferencia") Transferencia
+          option(value="debito") Débito
+          option(value="credito") Tarjeta de crédito
+      
+      .grupo-formulario
+        label(for="direccion") Dirección de envío:
+        input(type="text" name="direccion" required)
+      
+      button.boton.boton-principal(type="submit") Hacer pedido
+
+  script.
+    // Pasar productos al cliente para poder clonar el select
+    const productosData = !{JSON.stringify(productos)};
+
+    function actualizarPrecio(select) {
+      actualizarTotal();
+    }
+
+    function actualizarTotal() {
+      let total = 0;
+      const selects = document.querySelectorAll('.producto-select');
+      const inputs = document.querySelectorAll('.cantidad-input');
+      
+      selects.forEach((select, index) => {
+        const precio = parseFloat(select.options[select.selectedIndex].dataset.precio || 0);
+        const cantidad = parseInt(inputs[index].value || 0);
+        total += precio * cantidad;
+      });
+      
+      document.getElementById('total-display').textContent = total;
+    }
+
+    function agregarProducto() {
+      const container = document.getElementById('productos-container');
+      const primerItem = container.querySelector('.producto-item');
+      const nuevoItem = primerItem.cloneNode(true);
+      
+      nuevoItem.querySelector('select').selectedIndex = 0;
+      nuevoItem.querySelector('input').value = 1;
+      
+      nuevoItem.querySelector('.boton-peligro').style.display = 'inline-block';
+      
+      container.appendChild(nuevoItem);
+    }
+
+    function eliminarProducto(btn) {
+      const item = btn.closest('.producto-item');
+      item.remove();
+      actualizarTotal();
+    }
+
+    document.getElementById('form-pedido').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const selects = document.querySelectorAll('.producto-select');
+      const inputs = document.querySelectorAll('.cantidad-input');
+      const metodoPago = document.querySelector('[name="metodoPago"]').value;
+      const direccion = document.querySelector('[name="direccion"]').value;
+      
+      const productos = [];
+      
+      for (let i = 0; i < selects.length; i++) {
+        const productoId = selects[i].value;
+        const cantidad = inputs[i].value;
+        
+        if (!productoId) {
+          alert('Por favor seleccione todos los productos');
+          return;
+        }
+        
+        productos.push({ productoId, cantidad });
+      }
+
+      try {
+        const response = await fetch('/pedidos/crear', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            productos,
+            metodoPago,
+            direccion
+          }),
+          credentials: 'same-origin' // Enviar cookies automáticamente
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Pedido creado exitosamente');
+          window.location.href = '/pedidos/mis-pedidos';
+        } else {
+          alert(data.mensaje || 'Error al crear el pedido');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Error de conexión');
+      }
+    });
